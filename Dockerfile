@@ -38,7 +38,8 @@ COPY --from=nodebuild /usr/src/app ./
 
 # Install runtime dependencies
 RUN apk --no-cache add \
-    mediainfo
+    mediainfo \
+    tini
 
 # Create "download" user
 RUN adduser -h /home/download -s /sbin/nologin --disabled-password download
@@ -48,19 +49,6 @@ USER download
 
 # Expose port 3000 and 4200
 EXPOSE 3000
-EXPOSE 4200
 
-# Flood server in development mode
-ENTRYPOINT ["npm", "--prefix=/usr/src/app/", "run", "start", "--", "--host=0.0.0.0"]
-
-# Then, to start a debugging session of frontend:
-# docker exec -it ${container_id} npm --prefix=/usr/src/app/ run start:development:client
-
-# rtorrent-flood image
-FROM docker.io/jesec/rtorrent:master AS rtorrent
-FROM flood AS rtorrent-flood
-
-# Copy rTorrent
-COPY --from=rtorrent / /
-
-ENTRYPOINT ["npm", "--prefix=/usr/src/app/", "run", "start", "--", "--host=0.0.0.0", "--rtorrent"]
+ENV FLOOD_OPTION_HOST="0.0.0.0"
+ENTRYPOINT ["/sbin/tini", "--", "npm", "start"]
