@@ -373,6 +373,7 @@ class TransmissionClientGatewayService extends ClientGatewayService {
         'trackers',
         'labels',
         'activityDate',
+        'trackerStats',
       ])
       .then(this.processClientRequestSuccess, this.processClientRequestError)
       .then(async (torrents) => {
@@ -410,12 +411,12 @@ class TransmissionClientGatewayService extends ClientGatewayService {
                 isSequential: false,
                 message: torrent.errorString,
                 peersConnected: torrent.peersGettingFromUs,
-                peersTotal: torrent.peersGettingFromUs,
+                peersTotal: torrent.trackerStats[0].leecherCount,
                 percentComplete,
                 priority: TorrentPriority.NORMAL,
                 ratio,
                 seedsConnected: torrent.peersSendingToUs,
-                seedsTotal: torrent.peersSendingToUs,
+                seedsTotal: torrent.trackerStats[0].seederCount,
                 sizeBytes: torrent.totalSize,
                 status,
                 tags: torrent.labels || [],
