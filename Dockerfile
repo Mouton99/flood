@@ -25,6 +25,9 @@ RUN corepack enable && corepack install
 # Fetch dependencies from npm
 RUN pnpm install --frozen-lockfile
 
+# Update browserslist
+RUN npx update-browserslist-db@latest
+
 # Build assets
 RUN npm run build
 
