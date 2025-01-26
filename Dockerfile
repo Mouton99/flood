@@ -39,7 +39,8 @@ COPY --from=nodebuild /usr/src/app ./
 # Install runtime dependencies
 RUN apk --no-cache add \
     mediainfo \
-    tini
+    tini \
+    coreutils
 
 # Create "download" user
 RUN adduser -h /home/download -s /sbin/nologin --disabled-password download
